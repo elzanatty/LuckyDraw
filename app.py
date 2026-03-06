@@ -41,34 +41,26 @@ footer {{visibility: hidden;}}
   100% {{ text-shadow: 0 0 5px white; }}
 }}
 
-
 .name-box {{
     position: fixed;
-
     top: 49%;
     left: 10%;
-
     width: 50vw;
     height: 20vh;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     font-size: 2.2vw;
     font-weight: bold;
     color: black;
-
     text-align: center;
 }}
-
 
 .winner {{
     font-size: 2.5vw;
     color: black;
     animation: glow 1s infinite;
 }}
-
 
 @media (max-width: 768px) {{
 
@@ -93,6 +85,12 @@ def load_data():
     df = pd.read_excel("employees.xlsx")
     return df.to_dict("records")
 
+if st.button("Reload Data"):
+    st.cache_data.clear()
+    st.session_state.data = load_data()
+    st.success("Employee list reloaded!")
+
+
 if "data" not in st.session_state:
     st.session_state.data = load_data()
 
@@ -102,6 +100,7 @@ name_placeholder = st.empty()
 def animated_draw():
 
     if len(st.session_state.data) == 0:
+        st.warning("No employees left in the draw.")
         return
 
     winner = random.choice(st.session_state.data)
@@ -143,5 +142,3 @@ def animated_draw():
 
 if st.button("START DRAW"):
     animated_draw()
-
-
