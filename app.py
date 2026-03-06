@@ -7,9 +7,6 @@ import os
 
 st.set_page_config(layout="wide")
 
-# =====================
-# Load background
-# =====================
 def get_base64(file):
     with open(file, "rb") as f:
         return base64.b64encode(f.read()).decode()
@@ -18,9 +15,6 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 bg_path = os.path.join(current_dir, "background.jpg")
 background_base64 = get_base64(bg_path)
 
-# =====================
-# CSS for responsive design
-# =====================
 st.markdown(f"""
 <style>
 
@@ -32,51 +26,68 @@ body, .stApp {{
 
 [data-testid="stAppViewContainer"] {{
     background-image: url("data:image/jpg;base64,{background_base64}");
-    background-size: cover;          /* <-- scales to fill screen */
+    background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-attachment: fixed;
 }}
 
 header {{visibility: hidden;}}
 footer {{visibility: hidden;}}
 
-/* animation glow for winner */
 @keyframes glow {{
-  0% {{ text-shadow: 0 0 0.2em white; }}
-  50% {{ text-shadow: 0 0 1em gold; }}
-  100% {{ text-shadow: 0 0 0.2em white; }}
+  0% {{ text-shadow: 0 0 5px white; }}
+  50% {{ text-shadow: 0 0 25px gold; }}
+  100% {{ text-shadow: 0 0 5px white; }}
 }}
 
-/* Name box responsive */
+
 .name-box {{
-    position: absolute;
-    top: 45%;             /* 45% from top */
-    left: 10%;            /* 10% from left */
-    width: 80%;           /* take 80% of screen width */
-    height: auto;
+    position: fixed;
+
+    top: 49%;
+    left: 10%;
+
+    width: 50vw;
+    height: 20vh;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    font-size: 3vw;       /* responsive font size */
+    font-size: 2.2vw;
     font-weight: bold;
     color: black;
 
     text-align: center;
 }}
 
-/* Winner glow */
+/* الاسم النهائي مع توهج */
 .winner {{
+    font-size: 2.5vw;
+    color: black;
     animation: glow 1s infinite;
+}}
+
+/* تحسين للشاشات الصغيرة */
+@media (max-width: 768px) {{
+
+    .name-box {{
+        top: 49%;
+        left: 10%;
+        width: 50vw;
+        height: 20vh;
+        font-size: 5vw;
+    }}
+
+    .winner {{
+        font-size: 6vw;
+    }}
 }}
 
 </style>
 """, unsafe_allow_html=True)
 
-# =====================
-# Load data
-# =====================
 @st.cache_data
 def load_data():
     df = pd.read_excel("employees.xlsx")
@@ -87,14 +98,14 @@ if "data" not in st.session_state:
 
 name_placeholder = st.empty()
 
-# =====================
-# Animated draw
-# =====================
+
 def animated_draw():
+
     if len(st.session_state.data) == 0:
         return
 
     winner = random.choice(st.session_state.data)
+
     total_duration = 20
     start_time = time.time()
 
@@ -118,7 +129,6 @@ def animated_draw():
 
         time.sleep(speed)
 
-    # Display winner with glow
     winner_id = winner['ID']
     winner_id_display = "N/A" if pd.isna(winner_id) else str(int(winner_id))
 
@@ -130,8 +140,7 @@ def animated_draw():
 
     st.session_state.data.remove(winner)
 
-# =====================
-# Draw button
-# =====================
+
 if st.button("START DRAW"):
     animated_draw()
+
