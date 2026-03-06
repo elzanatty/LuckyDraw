@@ -62,14 +62,14 @@ footer {{visibility: hidden;}}
     text-align: center;
 }}
 
-/* الاسم النهائي مع توهج */
+
 .winner {{
     font-size: 2.5vw;
     color: black;
     animation: glow 1s infinite;
 }}
 
-/* تحسين للشاشات الصغيرة */
+
 @media (max-width: 768px) {{
 
     .name-box {{
@@ -143,4 +143,5 @@ def animated_draw():
 
 if st.button("START DRAW"):
     animated_draw()
+
 
